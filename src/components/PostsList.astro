@@ -1,0 +1,14 @@
+---
+import { getPublishedPosts } from "../scripts/notion/notion_integration"
+import PostCard from "./PostCard.astro"
+
+const publishedPosts = await getPublishedPosts()
+---
+
+<ul>
+    {
+        publishedPosts.map(p => (
+            <PostCard post={p}/>
+        ))
+    }
+</ul>
