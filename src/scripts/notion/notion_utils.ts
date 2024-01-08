@@ -51,7 +51,7 @@ export function extractDatabaseQueryResults(
       databasePages.push({
         id: result.id,
         title: extractDatabasePageTitle(result.properties),
-        cover: result.cover,
+        cover: extractDatabasePageExternalCover(result.cover),
         type: extractDatabasePageSelectProperty(result.properties),
       });
     });
@@ -67,6 +67,14 @@ function extractDatabasePageTitle(pageProperties: any): string {
   }
   
   return titleProperty.title[0].plain_text;
+}
+
+function extractDatabasePageExternalCover(cover: any): string | null { 
+  if(cover.type !== "external") {
+    return null
+  }
+
+  return cover.external.url
 }
 
 function extractDatabasePageSelectProperty(

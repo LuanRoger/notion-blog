@@ -3,14 +3,29 @@ import {
   extractDatabaseQueryResults,
   toNotionStatusFilter,
 } from "./notion_utils";
-import type { NotionDatabasePage, NotionPageStatusFilter } from "./types";
+import { NotionPageStatusFilter, type NotionDatabasePage } from "./types";
 import type { ListBlockChildrenResponse } from "@notionhq/client/build/src/api-endpoints";
 
 const notionClient = new Client({
   auth: import.meta.env.NOTION_SECRET,
 });
 
-export async function getPagesFromDatabase(
+export async function getPageContent(
+  pageId: string
+): Promise<ListBlockChildrenResponse> {
+  return await notionClient.blocks.children.list({
+    block_id: pageId,
+  });
+}
+
+export async function getPublishedPosts(): Promise<NotionDatabasePage[]> {
+  const databasePages = await getPagesFromDatabase(
+    NotionPageStatusFilter.published
+  );
+  return databasePages;
+}
+
+async function getPagesFromDatabase(
   filter?: NotionPageStatusFilter | undefined
 ): Promise<NotionDatabasePage[]> {
   const databaseId = import.meta.env.NOTION_DATABASE_ID;
@@ -25,12 +40,4 @@ export async function getPagesFromDatabase(
     response.results
   );
   return databasePages;
-}
-
-export async function getPageContent(
-  pageId: string
-): Promise<ListBlockChildrenResponse> {
-  return await notionClient.blocks.children.list({
-    block_id: pageId,
-  });
 }
