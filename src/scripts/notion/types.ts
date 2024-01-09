@@ -4,6 +4,15 @@ export enum NotionPageStatusFilter {
     published,
 }
 
+export interface NotionDatabasePropertiesName {
+    statusProperty: string
+    backlogStatus: string
+    draftStatus: string
+    publishedStatus: string
+    postTitleProperty: string
+    postTypeSelectProperty: string
+}
+
 export interface NotionStatusFilter {
     property: string
     status: {

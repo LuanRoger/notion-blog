@@ -3,15 +3,17 @@ import {
   type NotionDatabasePage,
   type NotionStatusFilter,
   type NotionDatabasePostTypeSelectProperty,
+  type NotionDatabasePropertiesName,
 } from "./types";
 
-const STATUS_PROPERTY = "Status";
-const BACKLOG_STATUS = "Backlog";
-const DRAFT_STATUS = "Rascunho";
-const PUBLISHED_STATUS = "Publicado";
-
-const POST_TITLE_PROPERTY = "Name";
-const POST_TYPE_SELECT_PROPERTY = "Tipo";
+const databaseProperties: NotionDatabasePropertiesName = {
+  statusProperty: import.meta.env.STATUS_PROPERTY,
+  backlogStatus: import.meta.env.BACKLOG_STATUS,
+  draftStatus: import.meta.env.DRAFT_STATUS,
+  publishedStatus: import.meta.env.PUBLISHED_STATUS,
+  postTitleProperty: import.meta.env.POST_TITLE_PROPERTY,
+  postTypeSelectProperty: import.meta.env.POST_TYPE_SELECT_PROPERTY,
+};
 
 export function toNotionStatusFilter(
   filter: NotionPageStatusFilter
@@ -19,23 +21,23 @@ export function toNotionStatusFilter(
   switch (filter) {
     case NotionPageStatusFilter.backlog:
       return {
-        property: STATUS_PROPERTY,
+        property: databaseProperties.statusProperty,
         status: {
-          equals: BACKLOG_STATUS,
+          equals: databaseProperties.backlogStatus,
         },
       };
     case NotionPageStatusFilter.draft:
       return {
-        property: STATUS_PROPERTY,
+        property: databaseProperties.statusProperty,
         status: {
-          equals: DRAFT_STATUS,
+          equals: databaseProperties.draftStatus,
         },
       };
     case NotionPageStatusFilter.published:
       return {
-        property: STATUS_PROPERTY,
+        property: databaseProperties.statusProperty,
         status: {
-          equals: PUBLISHED_STATUS,
+          equals: databaseProperties.publishedStatus,
         },
       };
   }
@@ -64,7 +66,7 @@ export function parseDatabasePage(page: any): NotionDatabasePage {
 }
 
 function extractDatabasePageTitle(pageProperties: any): string {
-  const titleProperty = pageProperties[POST_TITLE_PROPERTY];
+  const titleProperty = pageProperties[databaseProperties.postTitleProperty];
 
   if (titleProperty.type !== "title") {
     throw new Error("Title property is not a title property");
@@ -84,7 +86,7 @@ function extractDatabasePageExternalCover(cover: any): string | null {
 function extractDatabasePageSelectProperty(
   pageProperties: any
 ): NotionDatabasePostTypeSelectProperty | undefined {
-  const postTypeProperty = pageProperties[POST_TYPE_SELECT_PROPERTY];
+  const postTypeProperty = pageProperties[databaseProperties.postTypeSelectProperty];
 
   if (postTypeProperty.type !== "select" || postTypeProperty.select === null && postTypeProperty.color === undefined) {
     return undefined
