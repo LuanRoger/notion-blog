@@ -1,0 +1,16 @@
+---
+import { Render } from "@9gustin/react-notion-render";
+import PostLayout from "../../layouts/PostLayout.astro";
+import { getPostInfo, getPageContent } from "../../scripts/notion/notion_integration"
+
+
+const { postId } = Astro.params
+const pageInfo = await getPostInfo(postId!)
+const content = await getPageContent(postId!)
+
+const result: any = content.results
+---
+
+<PostLayout {...pageInfo}>
+    <Render blocks={result} />
+</PostLayout>

@@ -1,5 +1,6 @@
 ---
 import type { NotionDatabasePage } from "../scripts/notion/types";
+import PostTitleType from "./PostTitleType.astro";
 import PostType from "./PostType.astro";
 
 interface Props {
@@ -7,22 +8,17 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { title, cover, type } = post;
-const { select } = type;
+const { id, title, cover, type } = post;
 ---
 
 <li>
   <div class="p-3 rounded-md hover:bg-slate-300">
-    <a href="">
-      <img src={cover} class="object-cover w-full h-40 rounded-md" />
-      <div
-        class="flex flex-row justify-center items-center align-middle space-x-5"
-      >
-        <h1 class="text-4xl font-bold text-center">
-          {title}
-        </h1>
-        <PostType text={select.name} />
-      </div>
+    <a href=`/posts/${id}`>
+      {
+        cover !== null &&
+          <img src={cover} class="object-cover w-full h-40 rounded-md" />
+      }
+      <PostTitleType title={title} type={type}/>
     </a>
   </div>
 </li>
