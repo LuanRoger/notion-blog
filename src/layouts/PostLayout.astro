@@ -1,0 +1,29 @@
+---
+import PostTitleType from '../components/PostTitleType.astro';
+import type { NotionDatabasePostTypeSelectProperty } from '../scripts/notion/types';
+import PageLayout from './PageLayout.astro';
+interface Props {
+    title: string;
+    cover: string | null;
+    type?: NotionDatabasePostTypeSelectProperty | undefined
+}
+
+const { title, cover, type } = Astro.props
+console.log(cover);
+
+---
+
+<PageLayout title={title}>
+    <div class="flex flex-col gap-2">
+        {
+            cover !== null && 
+            <img src={cover} class="w-full h-72 rounded-md object-cover" />
+        }
+        <span class="flex">
+            <PostTitleType title={title} type={type}/>
+        </span>
+    </div>
+    <article class="mt-2">
+        <slot/>
+    </article>
+</PageLayout>
