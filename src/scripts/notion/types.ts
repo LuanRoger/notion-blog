@@ -23,5 +23,5 @@ export interface NotionDatabasePage {
     title: string,
     id: string,
     cover: string | null,
-    type: NotionDatabasePostTypeSelectProperty
+    type?: NotionDatabasePostTypeSelectProperty | undefined
 }

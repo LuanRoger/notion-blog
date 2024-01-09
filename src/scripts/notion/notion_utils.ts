@@ -48,15 +48,19 @@ export function extractDatabaseQueryResults(
   results
     .filter((r) => r.object === "page")
     .forEach((result) => {
-      databasePages.push({
-        id: result.id,
-        title: extractDatabasePageTitle(result.properties),
-        cover: extractDatabasePageExternalCover(result.cover),
-        type: extractDatabasePageSelectProperty(result.properties),
-      });
+      databasePages.push(parseDatabasePage(result));
     });
 
   return databasePages;
+}
+
+export function parseDatabasePage(page: any): NotionDatabasePage {
+  return {
+    id: page.id,
+    title: extractDatabasePageTitle(page.properties),
+    cover: extractDatabasePageExternalCover(page.cover),
+    type: extractDatabasePageSelectProperty(page.properties),
+  }
 }
 
 function extractDatabasePageTitle(pageProperties: any): string {
@@ -70,7 +74,7 @@ function extractDatabasePageTitle(pageProperties: any): string {
 }
 
 function extractDatabasePageExternalCover(cover: any): string | null { 
-  if(cover.type !== "external") {
+  if(cover === null || cover.type !== "external") {
     return null
   }
 
@@ -79,11 +83,11 @@ function extractDatabasePageExternalCover(cover: any): string | null {
 
 function extractDatabasePageSelectProperty(
   pageProperties: any
-): NotionDatabasePostTypeSelectProperty {
+): NotionDatabasePostTypeSelectProperty | undefined {
   const postTypeProperty = pageProperties[POST_TYPE_SELECT_PROPERTY];
 
-  if (postTypeProperty.type !== "select") {
-    throw new Error("Post type property is not a select property");
+  if (postTypeProperty.type !== "select" || postTypeProperty.select === null && postTypeProperty.color === undefined) {
+    return undefined
   }
 
   return {

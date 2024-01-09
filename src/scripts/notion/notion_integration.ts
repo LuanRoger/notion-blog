@@ -1,6 +1,7 @@
 import { Client } from "@notionhq/client";
 import {
   extractDatabaseQueryResults,
+  parseDatabasePage,
   toNotionStatusFilter,
 } from "./notion_utils";
 import { NotionPageStatusFilter, type NotionDatabasePage } from "./types";
@@ -9,6 +10,14 @@ import type { ListBlockChildrenResponse } from "@notionhq/client/build/src/api-e
 const notionClient = new Client({
   auth: import.meta.env.NOTION_SECRET,
 });
+
+export async function getPostInfo(postId: string): Promise<NotionDatabasePage> {
+  const response = await notionClient.pages.retrieve({
+    page_id: postId,
+  });
+  
+  return parseDatabasePage(response);
+}
 
 export async function getPageContent(
   pageId: string
